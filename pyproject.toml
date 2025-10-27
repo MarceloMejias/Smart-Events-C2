@@ -8,3 +8,59 @@ dependencies = [
     "django>=5.2.7",
     "pillow>=12.0.0",
 ]
+
+[tool.ruff]
+# Longitud de línea recomendada
+line-length = 100
+
+# Python version
+target-version = "py313"
+
+# Excluir directorios
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "migrations",
+    "*.pyc",
+]
+
+[tool.ruff.lint]
+# Reglas a activar
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "DJ",  # flake8-django
+]
+
+# Ignorar reglas específicas
+ignore = [
+    "E501",  # line too long (manejado por formatter)
+    "B008",  # do not perform function calls in argument defaults
+    "DJ001", # null=True on string-based fields (común en Django)
+    "DJ012", # Order of model's inner classes, methods (preferencia personal)
+]
+
+# Permitir auto-fix para estas reglas
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+# Usar comillas dobles
+quote-style = "double"
+
+# Indentar con 4 espacios
+indent-style = "space"
+
+# Fin de línea automático
+line-ending = "auto"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.1",
+]

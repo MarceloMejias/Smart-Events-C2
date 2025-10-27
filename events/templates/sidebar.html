@@ -1,0 +1,135 @@
+{% load static %}
+
+<!-- Navbar Tradicional -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'meta/logox.png' %}" alt="Smart Events" height="32" class="d-inline-block align-text-top">
+        </a>
+        
+        <!-- Toggler para móvil -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Navegación -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto gap-2">
+                <!-- Inicio -->
+                <li class="nav-item">
+                    <a class="btn {% if request.resolver_match.url_name == 'home' %}btn-outline-primary{% else %}btn-link text-light text-decoration-none{% endif %} rounded-pill px-3" href="{% url 'home' %}">
+                        <i class="fa-solid fa-house me-2"></i>
+                        Inicio
+                    </a>
+                </li>
+                
+                <!-- Eventos -->
+                <li class="nav-item">
+                    <a class="btn {% if request.resolver_match.url_name == 'events' %}btn-outline-primary{% else %}btn-link text-light text-decoration-none{% endif %} rounded-pill px-3" href="{% url 'events' %}">
+                        <i class="fa-solid fa-calendar-days me-2"></i>
+                        Eventos
+                    </a>
+                </li>
+                
+                {% if user.is_authenticated %}
+                <!-- Mis Eventos (solo si está autenticado) -->
+                <li class="nav-item">
+                    <a class="btn {% if request.resolver_match.url_name == 'my_events' %}btn-outline-primary{% else %}btn-link text-light text-decoration-none{% endif %} rounded-pill px-3" href="{% url 'my_events' %}">
+                        <i class="fa-solid fa-ticket me-2"></i>
+                        Mis Eventos
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <div class="vr text-white opacity-25 d-none d-lg-block" style="height: 2rem; margin-top: 0.25rem;"></div>
+                </li>
+                
+                <!-- Perfil -->
+                <li class="nav-item">
+                    <a class="btn btn-link text-light rounded-pill px-3 text-decoration-none" href="#">
+                        <i class="fa-solid fa-circle-user me-2"></i>
+                        {{ user.username }}
+                    </a>
+                </li>
+                
+                <!-- Logout -->
+                <li class="nav-item">
+                    <a class="btn btn-outline-danger rounded-pill px-3" href="{% url 'logout' %}">
+                        <i class="fa-solid fa-right-from-bracket me-2"></i>
+                        Salir
+                    </a>
+                </li>
+                {% else %}
+                <!-- Login/Register (solo si NO está autenticado) -->
+                <li class="nav-item">
+                    <div class="vr text-white opacity-25 d-none d-lg-block" style="height: 2rem; margin-top: 0.25rem;"></div>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="btn {% if request.resolver_match.url_name == 'login' %}btn-outline-primary{% else %}btn-link text-light text-decoration-none{% endif %} rounded-pill px-3" href="{% url 'login' %}">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>
+                        Iniciar Sesión
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="btn {% if request.resolver_match.url_name == 'register' %}btn-primary{% else %}btn-outline-primary{% endif %} rounded-pill px-3" href="{% url 'register' %}">
+                        <i class="fa-solid fa-user-plus me-2"></i>
+                        Registrarse
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .navbar {
+        padding: 0.75rem 1rem;
+    }
+    
+    .navbar-brand img {
+        transition: transform 0.2s ease;
+    }
+    
+    .navbar-brand:hover img {
+        transform: scale(1.05);
+    }
+    
+    .btn {
+        transition: all 0.2s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-outline-primary:hover {
+        box-shadow: 0 0.25rem 0.5rem rgba(var(--bs-primary-rgb), 0.3);
+    }
+    
+    .btn-outline-primary {
+        border-width: 2px;
+    }
+    
+    .btn-link:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+        .navbar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-item {
+            margin: 0.25rem 0;
+        }
+        
+        .vr {
+            display: none !important;
+        }
+    }
+</style>

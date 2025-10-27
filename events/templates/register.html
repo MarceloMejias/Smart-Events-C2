@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    
+    <!-- Bootswatch Quartz Theme -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap-quartz.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-dark">
+    <!-- Incluir la navbar -->
+    {% include 'sidebar.html' %}
+
+    <!-- Formulario de Registro -->
+    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center p-4">
+        <div class="row align-items-center g-5 w-100 mx-auto">
+            <!-- Texto de Bienvenida -->
+            <div class="col-lg-6 text-center text-lg-start">
+                <div class="mb-4">
+                    <i class="fas fa-user-plus fa-4x text-primary mb-3"></i>
+                </div>
+                <h1 class="display-4 fw-bold lh-1 mb-4 text-white">
+                    Únete a Smart Events
+                </h1>
+                <p class="fs-4 text-light-emphasis mb-4">
+                    Crea tu cuenta y comienza a disfrutar de los mejores eventos. Es rápido, fácil y completamente gratis.
+                </p>
+                <div class="d-flex gap-3 flex-wrap justify-content-center justify-content-lg-start">
+                    <div class="badge bg-success-subtle text-success border border-success px-3 py-2">
+                        <i class="fas fa-bolt me-2"></i>
+                        Registro instantáneo
+                    </div>
+                    <div class="badge bg-success-subtle text-success border border-success px-3 py-2">
+                        <i class="fas fa-gift me-2"></i>
+                        Acceso gratuito
+                    </div>
+                    <div class="badge bg-success-subtle text-success border border-success px-3 py-2">
+                        <i class="fas fa-star me-2"></i>
+                        Eventos exclusivos
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Formulario -->
+            <div class="col-md-10 mx-auto col-lg-6">
+                <div class="card bg-dark border-primary border-opacity-25 shadow-lg">
+                    <div class="card-body p-5 p-md-6">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="text-center mb-4">
+                                <h3 class="fw-bold text-white">Crear Cuenta</h3>
+                                <p class="text-muted small mb-0">Completa tus datos para registrarte</p>
+                            </div>
+                    
+                    <!-- Mostrar mensajes de error -->
+                    {% if error %}
+                    <div class="alert alert-danger d-flex align-items-center border-0 border-start border-danger border-4" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <div>{{ error }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} d-flex align-items-center border-0 border-start border-{{ message.tags }} border-4" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <div>{{ message }}</div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <!-- Campo de nombre de usuario -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="text"
+                            name="username"
+                            class="form-control bg-dark border-secondary"
+                            id="floatingUsername"
+                            placeholder="Usuario"
+                            required
+                        />
+                        <label for="floatingUsername">
+                            <i class="fas fa-user me-2 text-primary"></i>
+                            Nombre de Usuario
+                        </label>
+                    </div>
+
+                    <!-- Campo de correo electrónico -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control bg-dark border-secondary"
+                            id="floatingEmail"
+                            placeholder="nombre@ejemplo.com"
+                            required
+                        />
+                        <label for="floatingEmail">
+                            <i class="fas fa-envelope me-2 text-primary"></i>
+                            Correo Electrónico
+                        </label>
+                    </div>
+
+                    <!-- Campo de nombre completo -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    class="form-control bg-dark border-secondary"
+                                    id="floatingFirstName"
+                                    placeholder="Nombre"
+                                    required
+                                />
+                                <label for="floatingFirstName">
+                                    <i class="fas fa-id-card me-2 text-primary"></i>
+                                    Nombre
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    class="form-control bg-dark border-secondary"
+                                    id="floatingLastName"
+                                    placeholder="Apellido"
+                                    required
+                                />
+                                <label for="floatingLastName">
+                                    <i class="fas fa-id-card me-2 text-primary"></i>
+                                    Apellido
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo de contraseña -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="password"
+                            name="password1"
+                            class="form-control bg-dark border-secondary"
+                            id="floatingPassword1"
+                            placeholder="Contraseña"
+                            required
+                        />
+                        <label for="floatingPassword1">
+                            <i class="fas fa-lock me-2 text-primary"></i>
+                            Contraseña
+                        </label>
+                    </div>
+
+                    <!-- Campo de confirmación de contraseña -->
+                    <div class="form-floating mb-4">
+                        <input
+                            type="password"
+                            name="password2"
+                            class="form-control bg-dark border-secondary"
+                            id="floatingPassword2"
+                            placeholder="Confirmar Contraseña"
+                            required
+                        />
+                        <label for="floatingPassword2">
+                            <i class="fas fa-lock me-2 text-primary"></i>
+                            Confirmar Contraseña
+                        </label>
+                    </div>
+                    
+                    <!-- Botón de submit -->
+                    <button class="w-100 btn btn-lg btn-success shadow" type="submit">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Crear Cuenta
+                    </button>
+                    
+                    <div class="text-center my-3">
+                        <span class="text-muted small">¿Ya tienes una cuenta?</span>
+                    </div>
+                    
+                    <a href="{% url 'login' %}" class="w-100 btn btn-lg btn-outline-primary">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Iniciar Sesión
+                    </a>
+                    
+                    <hr class="my-4 border-secondary opacity-25">
+                    
+                    <div class="text-center">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Al registrarte, aceptas nuestros términos de uso y política de privacidad
+                        </small>
+                    </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluir el footer -->
+    {% include 'footer.html' %}
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Inicializar tooltips -->
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
+</body>
+</html>

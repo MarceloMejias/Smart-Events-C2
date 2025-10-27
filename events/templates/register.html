@@ -91,21 +91,6 @@
                         </label>
                     </div>
 
-                    <!-- Campo de correo electrónico -->
-                    <div class="form-floating mb-3">
-                        <input
-                            type="email"
-                            name="email"
-                            class="form-control bg-dark border-secondary"
-                            id="floatingEmail"
-                            placeholder="nombre@ejemplo.com"
-                            required
-                        />
-                        <label for="floatingEmail">
-                            <i class="fas fa-envelope me-2 text-primary"></i>
-                            Correo Electrónico
-                        </label>
-                    </div>
 
                     <!-- Campo de nombre completo -->
                     <div class="row g-3 mb-3">
@@ -174,6 +159,14 @@
                             Confirmar Contraseña
                         </label>
                     </div>
+
+                    <!-- Opción: registrarse como staff -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="1" id="registerAsStaff" name="register_as_staff">
+                        <label class="form-check-label text-white" for="registerAsStaff">
+                            Registrarme como staff (acceso al panel de administración)
+                        </label>
+                    </div>
                     
                     <!-- Botón de submit -->
                     <button class="w-100 btn btn-lg btn-success shadow" type="submit">
@@ -216,5 +209,6 @@
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     </script>
+    
 </body>
 </html>

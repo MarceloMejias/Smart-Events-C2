@@ -11,6 +11,8 @@ Este módulo contiene las vistas basadas en clases para gestionar:
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group, User
+from django.db import IntegrityError
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -245,9 +247,73 @@ class RegisterView(View):
         return render(request, "register.html")
 
     def post(self, request):
-        # Lógica de registro aquí
-        pass
-        return redirect("home")
+        # Si ya está autenticado, no permitir registrar otra cuenta
+        if request.user.is_authenticated:
+            messages.info(request, "Ya estás autenticado.")
+            return redirect("home")
+
+        username = (request.POST.get("username") or "").strip()
+        password1 = request.POST.get("password1") or ""
+        password2 = request.POST.get("password2") or ""
+        first_name = (request.POST.get("first_name") or "").strip()
+        last_name = (request.POST.get("last_name") or "").strip()
+
+        # Opcional: registro como staff (sin código, para demo)
+        register_as_staff = bool(request.POST.get("register_as_staff"))
+
+        # Validaciones básicas
+        if not username:
+            return render(
+                request, "register.html", {"error": "El nombre de usuario es obligatorio."}
+            )
+
+        if password1 != password2:
+            return render(request, "register.html", {"error": "Las contraseñas no coinciden."})
+
+        if len(password1) < 6:
+            return render(
+                request,
+                "register.html",
+                {"error": "La contraseña debe tener al menos 6 caracteres."},
+            )
+
+        # Crear usuario (sin campo email, según solicitud)
+        try:
+            user = User.objects.create_user(username=username, password=password1)
+            user.first_name = first_name
+            user.last_name = last_name
+
+            # Asignar is_staff si se validó el código
+            if register_as_staff:
+                user.is_staff = True
+
+            user.save()
+
+            # Intentar añadir al grupo 'staff' si existe
+            if register_as_staff:
+                staff_group = Group.objects.filter(name="staff").first()
+                if staff_group:
+                    user.groups.add(staff_group)
+
+        except IntegrityError:
+            return render(request, "register.html", {"error": "El nombre de usuario ya existe."})
+        except Exception:
+            return render(
+                request,
+                "register.html",
+                {"error": "No fue posible crear la cuenta. Intenta nuevamente."},
+            )
+
+        # Autologin después de registrarse
+        user = authenticate(request, username=username, password=password1)
+        if user is not None:
+            login(request, user)
+            messages.success(request, f"Cuenta creada. ¡Bienvenido, {user.username}!")
+            return redirect("home")
+
+        # Fallback: redirigir al login si por alguna razón no se pudo autenticar
+        messages.success(request, "Cuenta creada. Por favor, inicia sesión.")
+        return redirect("login")
 
 
 class LogoutView(View):

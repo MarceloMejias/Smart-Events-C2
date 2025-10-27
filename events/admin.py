@@ -3,7 +3,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import Category, Event, EventCategory, EventComment, EventRegistration
+from .models import Event
 
 
 @admin.register(Event)
@@ -14,6 +14,7 @@ class EventAdmin(admin.ModelAdmin):
         "nombre",
         "imagen_preview",
         "tipo",
+        "recaudacion_display",
         "fecha_inicio",
         "lugar",
         "ocupacion_display",
@@ -40,6 +41,10 @@ class EventAdmin(admin.ModelAdmin):
         "activo",
         "destacado",
     )
+    # Mostrar recaudación como campo de solo lectura en el change form
+    readonly_fields = ("imagen_preview", "recaudacion_display")
+
+    actions = ["calcular_recaudacion_total"]
 
     @admin.display(description="Vista Previa")
     def imagen_preview(self, obj):
@@ -94,10 +99,33 @@ class EventAdmin(admin.ModelAdmin):
             espacios,
         )
 
+    @admin.display(description="Recaudación")
+    def recaudacion_display(self, obj):
+        """Muestra la recaudación estimada para el evento (precio * registrados)."""
+        try:
+            precio = float(obj.precio) if obj.precio is not None else 0.0
+        except Exception:
+            precio = 0.0
+
+        total = obj.total_registrados()
+        recaudacion = precio * total
+        # Formatear la cifra primero para evitar problemas al pasar especificadores
+        formatted = f"{recaudacion:,.2f}"
+        return format_html("${}", formatted)
+
+    def calcular_recaudacion_total(self, request, queryset):
+        """Action de admin para sumar la recaudación de los eventos seleccionados."""
+        total = 0.0
+        for obj in queryset:
+            try:
+                precio = float(obj.precio) if obj.precio is not None else 0.0
+            except Exception:
+                precio = 0.0
+            total += precio * obj.total_registrados()
+
+        self.message_user(request, f"Recaudación total de los eventos seleccionados: ${total:,.2f}")
+
 
 # Registro simple de los demás modelos
-admin.site.register(Category)
-admin.site.register(EventCategory)
-admin.site.register(EventRegistration)
-admin.site.register(EventComment)
+# EventRegistration removed from admin to simplify the panel
 # Fin de events/admin.py

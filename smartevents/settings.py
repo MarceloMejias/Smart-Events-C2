@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -120,6 +121,12 @@ STATIC_URL = "static/"
 # Media files (User uploaded files)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Código para habilitar registro como staff mediante variable de entorno.
+# Defínelo en tu entorno (NO lo dejes en el repo en producción):
+#   export STAFF_REGISTRATION_CODE="tu-codigo-secreto"
+# Si la variable no está definida, el valor será None y la opción estará deshabilitada.
+STAFF_REGISTRATION_CODE = os.environ.get("STAFF_REGISTRATION_CODE")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
